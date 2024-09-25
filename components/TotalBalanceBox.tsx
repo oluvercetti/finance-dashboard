@@ -1,4 +1,3 @@
-import { formatAmount } from '@/lib/utils'
 import AnimatedCounter from './AnimatedCounter'
 
 const TotalBalanceBox = ({accounts =[], totalBanks, totalCurrentBalance}: TotalBalanceBoxProps) => {
