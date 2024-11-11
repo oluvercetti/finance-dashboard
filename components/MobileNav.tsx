@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AppLogo from "./AppLogo";
 
 const MobileNav = ({ user }: MobileNavProps) => {
     const pathname = usePathname()
@@ -24,10 +25,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
                 </SheetTrigger>
                 <SheetContent side="left" className="border-none bg-white">
                     <Link href="/" className="cursor-pointer flex items-center gap-1 px-4">
-                        <Image src="/icons/logo.svg" alt="Horizon Logo" width={34} height={34} />
-                        <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
-                            Horizon
-                        </h1>
+                        <AppLogo />
                     </Link>
                     <div className="mobilenav-sheet">
                         <SheetClose asChild>
