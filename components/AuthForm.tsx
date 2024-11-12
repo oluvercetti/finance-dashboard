@@ -10,9 +10,12 @@ import AppLogo from './AppLogo'
 import { AuthCustomInput } from './forms';
 import { Loader2 } from 'lucide-react';
 import { authFormSchema } from '@/lib/models';
+import { useRouter } from 'next/navigation';
+import { signIn, signUp } from '@/lib/actions/user.actions';
 
 
 const AuthForm = ({ type }: { type: string }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const isSignUp = type === 'sign-up';
@@ -38,10 +41,26 @@ const AuthForm = ({ type }: { type: string }) => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    console.log(values);
-    setIsLoading(false);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      setIsLoading(true);
+      if (isSignIn) {
+        const response = await signIn({ email: data.email, password: data.password });
+        if (response) {
+          router.push('/');
+        }
+      }
+
+      if (isSignUp) {
+        const newUser = await signUp(data);
+        setUser(newUser);
+      }
+    } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error)
+
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <section className="auth-form">
@@ -68,16 +87,17 @@ const AuthForm = ({ type }: { type: string }) => {
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-100'>
               {isSignUp && (
                 <>
-                  <div className='flex gap-4'>
+                  <div className='flex gap-4 md:flex-col'>
                     <AuthCustomInput control={form.control} name='firstName' label='First Name' placeholder='Enter your first name' type='text' formId='auth-form-firstname' />
                     <AuthCustomInput control={form.control} name='lastName' label='Last Name' placeholder='Enter your last name' type='text' formId='auth-form-lastname' />
                   </div>
                   <AuthCustomInput control={form.control} name='address' label='Address' placeholder='Enter your specific address' type='text' formId='auth-form-address' />
-                  <div className="flex gap-4">
+                  <AuthCustomInput control={form.control} name='city' label='City' placeholder='Enter your specific city' type='text' formId='auth-form-city' />
+                  <div className="flex gap-4 md:flex-col">
                     <AuthCustomInput control={form.control} name='state' label='State' placeholder='Example: Lagos' type='text' formId='auth-form-state' />
                     <AuthCustomInput control={form.control} name='postalCode' label='Postal Code' placeholder='Ex: 105102' type='text' formId='auth-form-postalcode' />
                   </div>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 md:flex-col">
                     <AuthCustomInput control={form.control} name='dateOfBirth' label='Date of Birth' placeholder='YYYY-MM-DD' type='text' formId='auth-form-dateofbirth' />
                     <AuthCustomInput control={form.control} name='bvn' label='BVN' placeholder='22209392832' type='text' formId='auth-form-bvn' />
                   </div>
