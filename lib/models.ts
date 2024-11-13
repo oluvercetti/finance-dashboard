@@ -11,5 +11,5 @@ export const authFormSchema = (isSignIn: boolean) => z.object({
     state: isSignIn ? z.string().optional() : z.string(),
     postalCode: isSignIn ? z.string().optional() : z.string(),
     dateOfBirth: isSignIn ? z.string().optional() : z.string(),
-    bvn: isSignIn ? z.string().optional() : z.string().min(11, 'BVN must be 11 digits'),
+    bvn: isSignIn ? z.string().optional() : z.string().min(11, 'BVN must be 11 digits').max(11, 'BVN must be 11 digits'),
   })
