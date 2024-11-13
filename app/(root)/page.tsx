@@ -1,17 +1,18 @@
 import HeaderBox from "@/components/HeaderBox"
 import RightSidebar from "@/components/RightSidebar"
 import TotalBalanceBox from "@/components/TotalBalanceBox"
+import { getLoggedInUser } from "@/lib/actions/user.actions"
 
-const Home = () => {
-  const loggedIn = { $id:"", firstName: 'John', lastName: 'Doe', email: 'test@gmail.com', userId: '', dwollaCustomerUrl: '', dwollaCustomerId: '', address1: '', city: '', state: '', postalCode: '', dateOfBirth: '', ssn: '' }
-  return (
+const Home = async () => {
+  const loggedIn = await getLoggedInUser()
+    return (
     <section className='home'>
       <div className="home-content">
         <header className="home-header">
           <HeaderBox
             type='greeting'
             title='Welcome'
-            user={loggedIn?.firstName || 'Guest'}
+            user={loggedIn?.name || 'Guest'}
             subtext='Horizon is a modern banking platform for the future.'
           />
 
@@ -27,7 +28,7 @@ const Home = () => {
       <RightSidebar 
       user={loggedIn}
       transactions={[]}
-      banks={[{ currentBalance: 2312.30 }, { currentBalance: 432.30 }]}
+      banks={[]}
       />
     </section>
   )
