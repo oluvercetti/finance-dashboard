@@ -221,6 +221,7 @@ declare interface RightSidebarProps {
 
 declare interface SidebarProps {
   user: User;
+  type?: "full" | "compact";
 }
 
 declare interface RecentTransactionsProps {
