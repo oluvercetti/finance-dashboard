@@ -53,7 +53,19 @@ const AuthForm = ({ type }: { type: string }) => {
       }
 
       if (isSignUp) {
-        const newUser = await signUp(data);
+        const userData = {
+          email: data.email,
+          password: data.password,
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address: data.address!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          bvn: data.bvn!,
+        }
+        const newUser = await signUp(userData);
         setUser(newUser);
       }
     } catch (error) {
