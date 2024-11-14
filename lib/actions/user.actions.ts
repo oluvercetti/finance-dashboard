@@ -5,7 +5,7 @@ import { cookies } from "next/headers"
 import { ID } from "node-appwrite"
 import { parseStringify } from "../utils"
 
-export const signIn = async ({email, password}: signInProps) => {
+export const signIn = async ({ email, password }: signInProps) => {
     try {
         const { account } = await createAdminClient();
         const response = await account.createEmailPasswordSession(email, password);
