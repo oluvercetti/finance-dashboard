@@ -3,7 +3,13 @@
 import { createAdminClient, createSessionClient } from "@/lib/appwrite"
 import { cookies } from "next/headers"
 import { ID } from "node-appwrite"
-import { parseStringify } from "../utils"
+import { extractCustomerIdFromUrl, parseStringify } from "../utils"
+import { createDwollaCustomer } from "./dwolla.actions"
+const {
+    APPWRITE_DATABASE_ID: DATABASE_ID,
+    APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
+    APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
+} = process.env;
 
 export const signIn = async ({ email, password }: signInProps) => {
     try {
@@ -15,12 +21,37 @@ export const signIn = async ({ email, password }: signInProps) => {
 
     }
 }
-export const signUp = async (data: SignUpParams) => {
-    try {
-        const { email, password, firstName, lastName } = data;
-        const { account } = await createAdminClient();
+export const signUp = async (userData: SignUpParams) => {
+    let newUserAccount;
 
-        const newUserAccount = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
+    try {
+        const { email, password, firstName, lastName } = userData;
+        const { account, database } = await createAdminClient();
+
+        newUserAccount = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
+
+        if (!newUserAccount) throw new Error("Account creation failed");
+
+        const dwollaCustomerUrl = await createDwollaCustomer({
+            ...userData,
+            type: "personal",
+        });
+
+        if (!dwollaCustomerUrl) throw new Error("Dwolla customer creation failed");
+
+        const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
+
+        const newUser = await database.createDocument(
+            DATABASE_ID!,
+            BANK_COLLECTION_ID!,
+            ID.unique(), {
+            ...userData,
+            userId: newUserAccount.$id,
+            dwollaCustomerId,
+            dwollaCustomerUrl
+
+        }
+        )
         const session = await account.createEmailPasswordSession(email, password);
 
         cookies().set("wbank-session", session.secret, {
@@ -29,7 +60,7 @@ export const signUp = async (data: SignUpParams) => {
             sameSite: "strict",
             secure: true,
         });
-        return parseStringify(newUserAccount);
+        return parseStringify(newUser);
     } catch (error) {
         console.log("🚀 ~ signUp ~ error:", error)
 
