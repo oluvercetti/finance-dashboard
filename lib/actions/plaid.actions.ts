@@ -49,11 +49,9 @@ export const createBankAccount = async ({ userId, bankId, accountId, accessToken
                 fundingSourceUrl,
                 sharableId,
             });
-        console.log("🚀 ~ createBankAccount ~ bankAccount:", bankAccount)
 
         return parseStringify(bankAccount);
     } catch (error) {
-    console.log("🚀 ~ createBankAccount ~ error:", error)
     }
 }
 
