@@ -4,7 +4,7 @@ import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestPr
 import { plaidClient } from "../plaid"
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "../appwrite";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { addFundingSource } from "./dwolla.actions";
 
 const {
@@ -107,5 +107,36 @@ export const exchangePublicToken = async ({ publicToken, user }: exchangePublicT
         })
     } catch (error) {
 
+    }
+}
+
+export const getBanks = async ({ userId }: getBanksProps) => {
+    try {
+        const { database } = await createAdminClient();
+
+        const banks = await database.listDocuments(
+            DATABASE_ID!,
+            BANK_COLLECTION_ID!,
+            [Query.equal("userId", [userId])]
+        );
+
+        return parseStringify(banks.documents);
+    } catch (error) {
+        
+    }
+}
+
+export const getBank = async ({ documentId }: getBankProps) => {
+    try {
+        const { database } = await createAdminClient();
+
+        const bank = await database.listDocuments(
+            DATABASE_ID!,
+            BANK_COLLECTION_ID!,
+            [Query.equal("$id", [documentId])]
+        );
+
+        return parseStringify(bank.documents[0]);
+    } catch (error) {
     }
 }
