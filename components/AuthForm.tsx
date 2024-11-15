@@ -34,11 +34,11 @@ const AuthForm = ({ type }: { type: string }) => {
       password: "",
       firstName: "",
       lastName: "",
-      address: "",
+      address1: "",
       state: "",
       postalCode: "",
       dateOfBirth: "",
-      bvn: "",
+      ssn: "",
     },
   })
 
@@ -58,18 +58,17 @@ const AuthForm = ({ type }: { type: string }) => {
           password: data.password,
           firstName: data.firstName!,
           lastName: data.lastName!,
-          address: data.address!,
+          address1: data.address1!,
           city: data.city!,
           state: data.state!,
           postalCode: data.postalCode!,
           dateOfBirth: data.dateOfBirth!,
-          bvn: data.bvn!,
+          ssn: data.ssn!,
         }
         const newUser = await signUp(userData);
         setUser(newUser);
       }
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error)
 
     } finally {
       setIsLoading(false);
@@ -77,7 +76,7 @@ const AuthForm = ({ type }: { type: string }) => {
   }
   return (
     <section className="auth-form">
-      <header className="flex flex-col gap-5">
+      <header className="flex flex-col gap-5 md:gap-8">
         <Link href="/" className="cursor-pointer flex items-center gap-1">
           <AppLogo />
         </Link>
@@ -97,22 +96,22 @@ const AuthForm = ({ type }: { type: string }) => {
       ) : (
         <>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-100'>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
               {isSignUp && (
                 <>
-                  <div className='flex gap-4 md:flex-col'>
+                  <div className='flex gap-4'>
                     <AuthCustomInput control={form.control} name='firstName' label='First Name' placeholder='Enter your first name' type='text' formId='auth-form-firstname' />
                     <AuthCustomInput control={form.control} name='lastName' label='Last Name' placeholder='Enter your last name' type='text' formId='auth-form-lastname' />
                   </div>
-                  <AuthCustomInput control={form.control} name='address' label='Address' placeholder='Enter your specific address' type='text' formId='auth-form-address' />
+                  <AuthCustomInput control={form.control} name='address1' label='Address' placeholder='Enter your specific address' type='text' formId='auth-form-address' />
                   <AuthCustomInput control={form.control} name='city' label='City' placeholder='Enter your specific city' type='text' formId='auth-form-city' />
-                  <div className="flex gap-4 md:flex-col">
+                  <div className="flex gap-4">
                     <AuthCustomInput control={form.control} name='state' label='State' placeholder='Example: Lagos' type='text' formId='auth-form-state' />
                     <AuthCustomInput control={form.control} name='postalCode' label='Postal Code' placeholder='Ex: 105102' type='text' formId='auth-form-postalcode' />
                   </div>
-                  <div className="flex gap-4 md:flex-col">
+                  <div className="flex gap-4">
                     <AuthCustomInput control={form.control} name='dateOfBirth' label='Date of Birth' placeholder='YYYY-MM-DD' type='text' formId='auth-form-dateofbirth' />
-                    <AuthCustomInput control={form.control} name='bvn' label='BVN' placeholder='22209392832' type='text' formId='auth-form-bvn' />
+                    <AuthCustomInput control={form.control} name='ssn' label='SSN' placeholder='22209392832' type='text' formId='auth-form-ssn' />
                   </div>
                 </>
               )}
