@@ -1,13 +1,15 @@
 import { logoutAccount } from '@/lib/actions/user.actions'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import React from 'react'
 
 const Footer = ({ user, type = "full" }: SidebarProps) => {
     const isFull = type === "full"
     const router = useRouter()
     const handleLogout = async () => {
-        const loggedOut = await logoutAccount();
+        const loggedOut = await logoutAccount().catch((error) => {
+            console.error("An error occurred while logging out");
+          });
         if (loggedOut) router.push('/sign-in')
     }
     return (

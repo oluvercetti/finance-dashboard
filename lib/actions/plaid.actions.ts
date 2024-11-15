@@ -1,4 +1,4 @@
-
+'use server';
 import { encryptId, parseStringify } from "../utils"
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid"
 import { plaidClient } from "../plaid"
@@ -7,11 +7,11 @@ import { createAdminClient } from "../appwrite";
 import { ID } from "node-appwrite";
 import { addFundingSource } from "./dwolla.actions";
 
-const { 
+const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
     APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
     APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
- } = process.env;
+} = process.env;
 
 export async function createLinkToken(user: User) {
     try {
@@ -19,14 +19,14 @@ export async function createLinkToken(user: User) {
             user: {
                 client_user_id: user.$id,
             },
-            client_name: user.name,
+            client_name: `${user.firstName} ${user.lastName}`,
             products: ["auth"] as Products[],
             language: "en",
             country_codes: ["US"] as CountryCode[],
         }
 
         const response = await plaidClient.linkTokenCreate(tokenParams);
-        return parseStringify(response?.data?.link_token);
+        return parseStringify({linkToken: response?.data?.link_token});
     }
     catch (error) {
 
@@ -38,8 +38,8 @@ export async function createBankAccount({ userId, bankId, accountId, accessToken
         const { database } = await createAdminClient();
 
         const bankAccount = await database.createDocument(
-            DATABASE_ID!, 
-            BANK_COLLECTION_ID!, 
+            DATABASE_ID!,
+            BANK_COLLECTION_ID!,
             ID.unique(), {
             userId,
             bankId,
@@ -48,6 +48,7 @@ export async function createBankAccount({ userId, bankId, accountId, accessToken
             fundingSourceUrl,
             sharableId,
         });
+        console.log("🚀 ~ createBankAccount ~ bankAccount:", bankAccount)
 
         return parseStringify(bankAccount);
     } catch (error) {
@@ -55,7 +56,7 @@ export async function createBankAccount({ userId, bankId, accountId, accessToken
     }
 }
 
-export const exchangePublicToken = async({ publicToken, user}: exchangePublicTokenProps) => {
+export const exchangePublicToken = async ({ publicToken, user }: exchangePublicTokenProps) => {
     try {
         // Exchange public token for access token and item ID
         const response = await plaidClient.itemPublicTokenExchange({
@@ -106,6 +107,6 @@ export const exchangePublicToken = async({ publicToken, user}: exchangePublicTok
             publicTokenExchange: "complete",
         })
     } catch (error) {
-        
+
     }
 }

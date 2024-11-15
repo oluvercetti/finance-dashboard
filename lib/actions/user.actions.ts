@@ -17,15 +17,15 @@ export const signIn = async ({ email, password }: signInProps) => {
         const response = await account.createEmailPasswordSession(email, password);
         return parseStringify(response);
     } catch (error) {
-        console.log("🚀 ~ signIn ~ error:", error)
+        throw error;
 
     }
 }
-export const signUp = async (userData: SignUpParams) => {
+export const signUp = async ({password, ...userData}: SignUpParams) => {
     let newUserAccount;
 
     try {
-        const { email, password, firstName, lastName } = userData;
+        const { email, firstName, lastName } = userData;
         const { account, database } = await createAdminClient();
 
         newUserAccount = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
@@ -43,7 +43,7 @@ export const signUp = async (userData: SignUpParams) => {
 
         const newUser = await database.createDocument(
             DATABASE_ID!,
-            BANK_COLLECTION_ID!,
+            USER_COLLECTION_ID!,
             ID.unique(), {
             ...userData,
             userId: newUserAccount.$id,
@@ -62,8 +62,7 @@ export const signUp = async (userData: SignUpParams) => {
         });
         return parseStringify(newUser);
     } catch (error) {
-        console.log("🚀 ~ signUp ~ error:", error)
-
+        throw error;
     }
 }
 
@@ -73,7 +72,7 @@ export async function getLoggedInUser() {
         const user = await account.get();
         return parseStringify(user);
     } catch (error) {
-        return null;
+        throw error;
     }
 }
 
@@ -82,7 +81,8 @@ export async function logoutAccount() {
         const { account } = await createSessionClient();
         await account.deleteSession("current");
         cookies().delete("wbank-session");
+        return true;
     } catch (error) {
-        return null;
+        throw error;
     }
 }
