@@ -13,7 +13,7 @@ const {
     APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
 } = process.env;
 
-export async function createLinkToken(user: User) {
+export const createLinkToken = async (user: User) => {
     try {
         const tokenParams = {
             user: {
@@ -26,33 +26,34 @@ export async function createLinkToken(user: User) {
         }
 
         const response = await plaidClient.linkTokenCreate(tokenParams);
-        return parseStringify({linkToken: response?.data?.link_token});
+        return parseStringify({ linkToken: response?.data?.link_token });
     }
     catch (error) {
 
     }
 }
 
-export async function createBankAccount({ userId, bankId, accountId, accessToken, fundingSourceUrl, sharableId }: createBankAccountProps) {
+export const createBankAccount = async ({ userId, bankId, accountId, accessToken, fundingSourceUrl, sharableId }: createBankAccountProps) => {
     try {
         const { database } = await createAdminClient();
 
         const bankAccount = await database.createDocument(
             DATABASE_ID!,
             BANK_COLLECTION_ID!,
-            ID.unique(), {
-            userId,
-            bankId,
-            accountId,
-            accessToken,
-            fundingSourceUrl,
-            sharableId,
-        });
+            ID.unique(),
+            {
+                userId,
+                bankId,
+                accountId,
+                accessToken,
+                fundingSourceUrl,
+                sharableId,
+            });
         console.log("🚀 ~ createBankAccount ~ bankAccount:", bankAccount)
 
         return parseStringify(bankAccount);
     } catch (error) {
-
+    console.log("🚀 ~ createBankAccount ~ error:", error)
     }
 }
 

@@ -21,7 +21,7 @@ export const signIn = async ({ email, password }: signInProps) => {
 
     }
 }
-export const signUp = async ({password, ...userData}: SignUpParams) => {
+export const signUp = async ({ password, ...userData }: SignUpParams) => {
     let newUserAccount;
 
     try {
@@ -60,6 +60,7 @@ export const signUp = async ({password, ...userData}: SignUpParams) => {
             sameSite: "strict",
             secure: true,
         });
+
         return parseStringify(newUser);
     } catch (error) {
         throw error;
