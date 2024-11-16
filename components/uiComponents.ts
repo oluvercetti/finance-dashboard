@@ -20,5 +20,15 @@ export {
     TableHead,
     TableHeader,
     TableRow,
-  } from "@/components/ui/table"
-  
+} from "@/components/ui/table"
+
+export { Textarea } from "./ui/textarea";
+
+export {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+  } from "@/components/ui/select";
