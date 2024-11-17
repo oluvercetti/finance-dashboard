@@ -31,4 +31,7 @@ export {
     SelectItem,
     SelectLabel,
     SelectTrigger,
-  } from "@/components/ui/select";
+} from "@/components/ui/select";
+
+
+export { Button } from "./ui/button";

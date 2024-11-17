@@ -13,7 +13,6 @@ import { getBank, getBankByAccountId } from "@/lib/actions/plaid.actions";
 import { decryptId } from "@/lib/utils";
 
 import { BankDropdown } from "./BankDropdown";
-import { Button } from "./ui/button";
 import {
     Form,
     FormControl,
@@ -22,7 +21,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-    Textarea
+    Textarea,
+    Button
 } from "./uiComponents";
 import { paymentFormSchema } from "@/lib/models";
 import { PaymentCustomInput } from './forms';
