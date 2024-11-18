@@ -34,4 +34,6 @@ export {
 } from "@/components/ui/select";
 
 
-export { Button } from "./ui/button";
+export { Button } from "@/components/ui/button";
+
+export { Progress } from "@/components/ui/progress";
