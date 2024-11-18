@@ -69,8 +69,6 @@ const AuthForm = ({ type }: { type: string }) => {
         setUser(newUser);
       }
     } catch (error) {
-
-    } finally {
       setIsLoading(false);
     }
   }
