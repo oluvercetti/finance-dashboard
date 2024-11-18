@@ -3,26 +3,30 @@ import BankCard from '@/components/BankCard';
 import HeaderBox from '@/components/HeaderBox'
 import { getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import { useAuthContext } from '@/providers/AuthContext';
 
 const MyBanks = () => {
-  const [loggedIn, setLoggedIn] = useState<User>();
+  const { loggedInUser } = useAuthContext();
+  const [loggedIn, setLoggedIn] = useState<User>(loggedInUser);
   const [accounts, setAccounts] = useState<AccountResponse>();
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const loggedInResponse = await getLoggedInUser();
+      const loggedInResponse = loggedIn ?? await getLoggedInUser();
       const accountsResponse = await getAccounts({ userId: loggedInResponse?.$id });
-      setLoggedIn(loggedInResponse);
+      loggedIn ?? setLoggedIn(loggedInResponse);
       setAccounts(accountsResponse);
       setIsLoading(false);
     };
+
     fetchData().catch((error) => {
       console.error(error);
       setIsLoading(false);
     });
   }, []);
+
   return (
     <section className='flex'>
       <div className="my-banks">
