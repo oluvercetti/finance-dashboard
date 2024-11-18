@@ -108,7 +108,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                                 <div className="flex w-full flex-col">
                                     <FormControl>
                                         <BankDropdown
-                                            accounts={accounts}
+                                            accounts={accounts ?? []}
                                             setValue={form.setValue}
                                             otherStyles="!w-full"
                                         />
@@ -164,7 +164,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 <PaymentCustomInput control={form.control} name="amount" label="Amount" type="text" placeholder="ex: 5.00" formId="payment-form-amount"/>
 
                 <div className="payment-transfer_btn-box">
-                    <Button type="submit" className="payment-transfer_btn">
+                    <Button type="submit" className="payment-transfer_btn" disabled={isLoading}>
                         {isLoading ? (
                             <>
                                 <Loader2 size={20} className="animate-spin" /> &nbsp; Sending...
