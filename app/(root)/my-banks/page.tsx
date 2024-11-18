@@ -1,12 +1,28 @@
+"use client";
 import BankCard from '@/components/BankCard';
 import HeaderBox from '@/components/HeaderBox'
 import { getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions'
-import React from 'react'
+import { useEffect, useState } from 'react'
 
-const MyBanks = async () => {
-  const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({ userId: loggedIn?.$id });
+const MyBanks = () => {
+  const [loggedIn, setLoggedIn] = useState<User>();
+  const [accounts, setAccounts] = useState<AccountResponse>();
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const loggedInResponse = await getLoggedInUser();
+      const accountsResponse = await getAccounts({ userId: loggedInResponse?.$id });
+      setLoggedIn(loggedInResponse);
+      setAccounts(accountsResponse);
+      setIsLoading(false);
+    };
+    fetchData().catch((error) => {
+      console.error(error);
+      setIsLoading(false);
+    });
+  }, []);
   return (
     <section className='flex'>
       <div className="my-banks">
@@ -17,11 +33,14 @@ const MyBanks = async () => {
             Your cards
           </h2>
           <div className="flex flex-wrap gap-6">
+            {isLoading && <div className="animate-pulse w-full h-36 bg-gray-100 rounded-lg">
+              Loading...
+            </div>}
             {accounts && accounts.data.map((account: Account) => (
               <BankCard
                 key={accounts.id}
                 account={account}
-                userName={loggedIn?.firstName} />
+                userName={loggedIn!?.firstName} />
             ))}
           </div>
         </div>
