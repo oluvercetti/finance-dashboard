@@ -63,6 +63,11 @@ declare type Account = {
   sharableId: string;
 };
 
+declare type AccountResponse = {
+  data: Account[];
+  id: string;
+};
+
 declare type Transaction = {
   id: string;
   $id: string;
