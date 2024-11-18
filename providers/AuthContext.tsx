@@ -9,8 +9,8 @@ interface MyContextProps {
 interface AuthContextProps {
     loggedInUser: any;
     setLoggedInUser: (user: any) => void;
-    accounts: any;
-    setAccounts: (accounts: any) => void;
+    bankAccounts: any;
+    setBankAccounts: (accounts: any) => void;
 }
 
 // Create a new context
@@ -20,15 +20,15 @@ export const AuthContext = createContext<AuthContextProps | undefined>(undefined
 export const AuthContextProvider = ({ children }: MyContextProps) => {
     // Define your state and any necessary functions
     const [loggedInUser, setLoggedInUser] = useState(null);
-    const [accounts, setAccounts] = useState(null);
+    const [bankAccounts, setBankAccounts] = useState(null);
 
 
     // Add any functions to update the state
     const contextValue = {
         loggedInUser,
         setLoggedInUser,
-        accounts,
-        setAccounts,
+        bankAccounts,
+        setBankAccounts,
     }
     // Return the provider component with the state and functions
     return (
