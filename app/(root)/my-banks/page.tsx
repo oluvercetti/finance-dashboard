@@ -7,23 +7,19 @@ import { useEffect, useState } from 'react'
 import { useAuthContext } from '@/providers/AuthContext';
 
 const MyBanks = () => {
-  const { loggedInUser } = useAuthContext();
+  const { loggedInUser, bankAccounts } = useAuthContext();
   const [loggedIn, setLoggedIn] = useState<User>(loggedInUser);
-  const [accounts, setAccounts] = useState<AccountResponse>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [accounts, setAccounts] = useState<AccountResponse>(bankAccounts);
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
       const loggedInResponse = loggedIn ?? await getLoggedInUser();
-      const accountsResponse = await getAccounts({ userId: loggedInResponse?.$id });
+      const accountsResponse = bankAccounts ?? await getAccounts({ userId: loggedInResponse?.$id });
       loggedIn ?? setLoggedIn(loggedInResponse);
-      setAccounts(accountsResponse);
-      setIsLoading(false);
+      bankAccounts ?? setAccounts(accountsResponse);
     };
 
     fetchData().catch((error) => {
       console.error(error);
-      setIsLoading(false);
     });
   }, []);
 
@@ -37,12 +33,12 @@ const MyBanks = () => {
             Your cards
           </h2>
           <div className="flex flex-wrap gap-6">
-            {isLoading && <div className="animate-pulse w-full h-36 bg-gray-100 rounded-lg">
+            {!accounts?.data?.length && <div className="animate-pulse w-full h-36 bg-gray-100 rounded-lg">
               Loading...
             </div>}
             {accounts && accounts.data.map((account: Account) => (
               <BankCard
-                key={accounts.id}
+                key={account.id}
                 account={account}
                 userName={loggedIn!?.firstName} />
             ))}
