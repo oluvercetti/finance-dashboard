@@ -66,6 +66,8 @@ declare type Account = {
 declare type AccountResponse = {
   data: Account[];
   id: string;
+  totalBanks?: number;
+  totalCurrentBalance?: number;
 };
 
 declare type Transaction = {
