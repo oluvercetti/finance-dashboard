@@ -341,3 +341,8 @@ declare interface AnimatedCounterProps {
   duration?: number;
   prefix?: string;
 }
+
+declare interface LoadingStateProps {
+  isLoading?: boolean;
+  isBusy?: boolean;
+}
