@@ -8,17 +8,17 @@ import { useState, useEffect } from 'react'
 import { useAuthContext } from '@/providers/AuthContext';
 
 const PaymentTransfer = () => {
-  const { loggedInUser } = useAuthContext();
+  const { loggedInUser, bankAccounts } = useAuthContext();
   const [loggedIn, setInLoggedIn] = useState<User>(loggedInUser);
-  const [accounts, setAccounts] = useState<AccountResponse>();
+  const [accounts, setAccounts] = useState<AccountResponse>(bankAccounts);
 
   const accountsData = accounts?.data ?? [];
   useEffect(() => {
     const fetchData = async () => {
       const loggedInResponse = loggedIn ?? await getLoggedInUser();
-      const accountsResponse = await getAccounts({ userId: loggedInResponse?.$id });
+      const accountsResponse = bankAccounts ?? await getAccounts({ userId: loggedInResponse?.$id });
       loggedIn ?? setInLoggedIn(loggedInResponse);
-      setAccounts(accountsResponse);
+      bankAccounts ?? setAccounts(accountsResponse);
     };
 
     fetchData().catch((error) => {
