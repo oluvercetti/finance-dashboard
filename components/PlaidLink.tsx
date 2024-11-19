@@ -41,7 +41,6 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
                     <p className="hiddenl text-[16px] font-semibold text-black-2 xl:block">
                         Connect bank
                     </p>
-                    Connect bank
                 </Button>
             )}
             {!isPrimary && !isGhost && (

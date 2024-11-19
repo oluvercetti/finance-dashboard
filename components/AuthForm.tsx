@@ -13,6 +13,7 @@ import { authFormSchema } from '@/lib/models';
 import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/lib/actions/user.actions';
 import PlaidLink from './PlaidLink';
+import { useAuthContext } from '@/providers/AuthContext';
 
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -26,6 +27,7 @@ const AuthForm = ({ type }: { type: string }) => {
   const footerLink = isSignIn ? '/sign-up' : '/sign-in';
   const footerText = isSignIn ? 'Sign Up' : 'Sign In';
   const formSchema = authFormSchema(isSignIn);
+  const { setLoggedInUser } = useAuthContext()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,6 +49,7 @@ const AuthForm = ({ type }: { type: string }) => {
       setIsLoading(true);
       if (isSignIn) {
         const response = await signIn({ email: data.email, password: data.password });
+        setLoggedInUser(response);
         if (response) {
           router.push('/');
         }
@@ -66,11 +69,10 @@ const AuthForm = ({ type }: { type: string }) => {
           ssn: data.ssn!,
         }
         const newUser = await signUp(userData);
+        setLoggedInUser(newUser);
         setUser(newUser);
       }
     } catch (error) {
-
-    } finally {
       setIsLoading(false);
     }
   }

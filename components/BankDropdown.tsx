@@ -13,6 +13,7 @@ import {
   SelectTrigger,
 } from "./uiComponents";
 import { formUrlQuery, formatAmount } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 export const BankDropdown = ({
   accounts = [],
@@ -43,6 +44,7 @@ export const BankDropdown = ({
     <Select
       defaultValue={selected?.id}
       onValueChange={(value) => handleBankChange(value)}
+      disabled={!accounts.length}
     >
       <SelectTrigger
         className={`flex w-full bg-white gap-3 md:w-[300px] ${otherStyles}`}
@@ -53,7 +55,9 @@ export const BankDropdown = ({
           height={20}
           alt="account"
         />
-        <p className="line-clamp-1 w-full text-left">{selected?.name}</p>
+        <p className="line-clamp-1 w-full text-left">{selected?.name ?? "Select a bank to display"}</p>
+
+        {!accounts.length && <Loader2 size={20} className="animate-spin" />}
       </SelectTrigger>
       <SelectContent
         className={`w-full bg-white md:w-[300px] ${otherStyles}`}

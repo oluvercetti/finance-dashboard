@@ -1,17 +1,24 @@
+"use client";
 import { logoutAccount } from '@/lib/actions/user.actions'
 import Image from 'next/image'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React from 'react'
+import { useAuthContext } from '@/providers/AuthContext';
 
 const Footer = ({ user, type = "full" }: SidebarProps) => {
     const isFull = type === "full"
     const router = useRouter()
+    const { setLoggedInUser, setBankAccounts } = useAuthContext();
     const handleLogout = async () => {
-        const loggedOut = await logoutAccount().catch((error) => {
-            console.error("An error occurred while logging out");
-          });
-        if (loggedOut) router.push('/sign-in')
-    }
+        try {
+            await logoutAccount();
+            setLoggedInUser(null);
+            setBankAccounts(null);
+            router.push('/');
+        } catch (error) {
+            console.error("An error occurred while logging out", error);
+        }
+    };
     return (
         <footer className='footer'>
             <div className={isFull ? "footer_name" : "footer_name-mobile"}>
@@ -28,7 +35,7 @@ const Footer = ({ user, type = "full" }: SidebarProps) => {
                 </p>
             </div>
             <div className="footer_image" onClick={handleLogout}>
-                <Image src="icons/logout.svg" fill alt='logout'/>
+                <Image src="icons/logout.svg" fill alt='logout' />
             </div>
         </footer>
     )

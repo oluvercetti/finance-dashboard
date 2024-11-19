@@ -63,6 +63,13 @@ declare type Account = {
   sharableId: string;
 };
 
+declare type AccountResponse = {
+  data: Account[];
+  id: string;
+  totalBanks?: number;
+  totalCurrentBalance?: number;
+};
+
 declare type Transaction = {
   id: string;
   $id: string;
@@ -333,4 +340,9 @@ declare interface AnimatedCounterProps {
   amount: number;
   duration?: number;
   prefix?: string;
+}
+
+declare interface LoadingStateProps {
+  isLoading?: boolean;
+  isBusy?: boolean;
 }
