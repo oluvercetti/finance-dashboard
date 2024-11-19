@@ -5,6 +5,7 @@ import { getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import { useEffect, useState } from 'react'
 import { useAuthContext } from '@/providers/AuthContext';
+import FullPageLoader from '@/components/FullPageLoader';
 
 const MyBanks = () => {
   const { loggedInUser, bankAccounts } = useAuthContext();
@@ -33,9 +34,7 @@ const MyBanks = () => {
             Your cards
           </h2>
           <div className="flex flex-wrap gap-6">
-            {!accounts?.data?.length && <div className="animate-pulse w-full h-36 bg-gray-100 rounded-lg">
-              Loading...
-            </div>}
+            {!accounts?.data?.length && <FullPageLoader text='Loading' type='Spinner'/>}
             {accounts && accounts.data.map((account: Account) => (
               <BankCard
                 key={account.id}
